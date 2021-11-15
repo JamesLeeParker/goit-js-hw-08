@@ -3,11 +3,22 @@ const iframeRef = document.querySelector('#vimeo-player');
 const player = new Vimeo.Player(iframeRef);
 const throttle = require('lodash.throttle');
 
-const currentTime = localStorage.getItem('videoplayer-current-time');
-console.log(currentTime);
-
-const onPlay = function (data) {
-  // data is an object containing properties specific to that event
+const onPlay = () => {
+  player
+    .getCurrentTime()
+    .then(function (seconds) {
+      localStorage.setItem('videoplayer-current-time', seconds);
+    })
+    .catch(function (error) {});
 };
 
-player.on('timeupdate', onPlay);
+let currentTime = localStorage.getItem('videoplayer-current-time');
+
+player.setCurrentTime(currentTime);
+
+player.on(
+  'timeupdate',
+  throttle(function () {
+    onPlay();
+  }, 500),
+);
