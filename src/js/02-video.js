@@ -20,5 +20,5 @@ player.on(
   'timeupdate',
   throttle(function () {
     onPlay();
-  }, 500),
+  }, 2500),
 );
